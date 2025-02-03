@@ -11,7 +11,7 @@ define('DB', 'mysql');
 
 define('APP_NAME', 'projet-mvc-php');
 
-define('ROOT', 'http://localhost/sikal_achraf-youdemy/public');
+define('ROOT', 'http://localhost/projet-mvc-php/public');
 
 const TABLES = "
 ";

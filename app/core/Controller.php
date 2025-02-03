@@ -6,7 +6,7 @@ class Controller
 {
     public function view($view,$data = []) {
         extract($data);
-        $filename = "../app/view/front/".$view.".twig";
+        $filename = __DIR__."/../views/front/".$view.".twig";
         if (file_exists($filename)) {
             require $filename;
         }else {
