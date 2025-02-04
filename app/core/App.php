@@ -7,7 +7,8 @@ class app {
 
     function __construct() {
         $arr = $this->geturl();
-        $filename = __DIR__."/../controllers/front/".ucfirst($arr[0])."Controller.php";
+        $office = "front";
+        $filename = file_exists(__DIR__."/../controllers/$office/".ucfirst($arr[0])."Controller.php") ? __DIR__."/../controllers/front/".ucfirst($arr[0])."Controller.php" : __DIR__."/../controllers/back/".ucfirst($arr[0])."Controller.php";
         if(file_exists($filename))
         {
             require $filename;

@@ -1,11 +1,9 @@
 <header class="udemy-header">
 <link rel="stylesheet" href="{{style}}/assets/css/style.css">
     <div class="header-container">
-      <div class="logo">
-        <a href="{{ROOT}}">
-            <img src="{{style}}/assets/images/logo.png" alt="">
+        <a href="{{ROOT}}" style="text-decoration: none;">
+            <h1 style="font-weight: 900; margin-top: 0px; margin-bottom: 0px;">logo</h1>
         </a>
-      </div>
       <div class="categories-dropdown">
         <a href="{{ROOT}}/home" class="dropdown-button">Categories</a>
         <div class="dropdown-content">
@@ -31,7 +29,7 @@
       </nav>
   
       <div class="user-actions">
-        {% if true %}
+          {% if true %}
             <a href="{{ROOT}}/login" class="btn btn-outline">Log in</a>
             <a href="{{ROOT}}/signup" class="btn btn-primary">Sign up</a>
             {% else %}
@@ -43,8 +41,7 @@
                   <a href="{{ROOT}}/logout">logout</a>
                 </div>
               </div>
-                
-            {% endif %}
+          {% endif %}
       </div>
     </div>
   </header>

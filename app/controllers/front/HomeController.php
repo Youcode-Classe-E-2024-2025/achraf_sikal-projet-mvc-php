@@ -1,12 +1,10 @@
 <?php
-require_once __DIR__.'/../../../vendor/autoload.php';
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class home extends controller{
     public function index(){
-        echo 'aff';
         $data['title'] = 'home';
         $this->view('home',$data);
         $loader = new FilesystemLoader('templates');
