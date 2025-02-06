@@ -5,6 +5,8 @@ use Twig\Loader\FilesystemLoader;
 
 class home extends controller{
     public function index(){
+        $db= new database();
+        $db->createTable();
         $data['title'] = 'home';
         $this->view('home',$data);
         $loader = new FilesystemLoader('templates');

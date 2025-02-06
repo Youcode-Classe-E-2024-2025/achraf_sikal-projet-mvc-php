@@ -1,7 +1,9 @@
 <?php
+
 spl_autoload_register(function($class_name)
 {
-    require __DIR__."/../Model/".$class_name."Model.php";
+    $model = __DIR__."/../models/".$class_name.".php";
+    require $model;
 });
 require "session.php";
 

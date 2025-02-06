@@ -4,7 +4,7 @@ class database
 {
     private function connect()
     {
-        return new PDO(DB.":hostname=".DBHOST.";dbname=".DBNAME, DBUSER, DBPASS);
+        return new PDO(DB.":host=".DBHOST.";dbname=".DBNAME, DBUSER, DBPASS);
     }
     public function query($query, $data = [])
     {
@@ -23,6 +23,11 @@ class database
     }
     public function createTable() 
     {
-        $this->query(TABLES);
+        $table = explode(";",trim(trim(TABLES)));
+        foreach ($table as $t) {
+            if ($t) {
+                $this->query($t);
+            }
+        }
     }
 }

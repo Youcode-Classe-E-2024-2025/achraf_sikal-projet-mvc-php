@@ -3,6 +3,7 @@
 /**
  * main model class
  */
+
 class model extends database
 {
     protected $table = "";
