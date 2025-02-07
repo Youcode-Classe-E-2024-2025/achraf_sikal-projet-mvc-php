@@ -38,15 +38,19 @@ class user extends controller{
     {
         $data['title'] = "login";
         $data['errors'] = [];
+        $twigData = ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public','data'=>$data];
         $user= new userModel();
         if ($_SERVER["REQUEST_METHOD"]== "POST") {
                 $row = $user->first(['email'=>$_POST['email']]);
                 if ($row && password_verify((string) $_POST['password'],(string) $row['password'])) {
                     Auth::authenticate($row);
-                    redirect('home');
+                    $twigData = array_merge($twigData, auth::getfirstname());
+                    $twigData = array_merge($twigData, auth::getlastname());
+                    $twigData = array_merge($twigData, auth::getemail());
+                    // redirect('home');
                 }
                 $data['errors']['email']= "Wrong email or password";
         }
-        echo $this->index()->render('login.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public','data'=>$data]);
+        echo $this->index()->render('login.html.twig', $twigData);
     }
 }

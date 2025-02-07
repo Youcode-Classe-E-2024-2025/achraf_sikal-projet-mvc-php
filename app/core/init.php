@@ -12,5 +12,6 @@ require __DIR__."/../config/config.php";
 require "functions.php";
 require "database.php";
 require "model.php";
+require "Auth.php";
 require "Controller.php";
 require "app.php";

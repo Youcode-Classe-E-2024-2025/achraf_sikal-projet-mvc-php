@@ -21,13 +21,13 @@
 
                 <div class="pt-4 pb-2">
                 <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                <h1>{{firstname}}</h1>
                 <p class="text-center small">Enter your personal details to create account</p>
                 </div>
                 {% if data['errors']['email'] is defined %}
                     <div class="alert alert-danger" role="alert">
                         {{ data['errors']['email'] }}
                     </div>
-                {% elseif auth::getfirstname() %}
                 {% endif %}
 
             <form method="post" class="row g-3 needs-validation" novalidate>

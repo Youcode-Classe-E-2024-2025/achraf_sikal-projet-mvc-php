@@ -7,6 +7,7 @@
 class model extends database
 {
     protected $table = "";
+    protected $primaryKey = "id";
 
     public function insert($data){
         if (!empty($this->queryColumns)) {
