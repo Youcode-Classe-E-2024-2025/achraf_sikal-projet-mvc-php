@@ -23,7 +23,7 @@ class model extends database
 
         $this->query($query, $data);
     }
-    public function update($id, $data,$idName = "user_id"){
+    public function update($id, $data,$idName = "id"){
         if (!empty($this->queryColumns)) {
             foreach ($data as $key => $value) {
                 if (!in_array($key, $this->queryColumns)) {
@@ -113,7 +113,7 @@ class model extends database
         }
 
         $query = trim($query, "&& ");
-        $query .= " order by user_id $order limit 1";
+        $query .= " order by id $order limit 1";
         $res = $this->query($query, $data);
         if (is_array($res)) {
             ////// call afterSelect function ////////////

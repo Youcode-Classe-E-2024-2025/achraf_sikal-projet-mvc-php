@@ -2,15 +2,19 @@
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\Extension\DebugExtension;
 
 class user extends controller{
     public function index(){
         $data['title'] = 'home';
         $this->view('users',$data);
         $loader = new FilesystemLoader('templates');
-        $twig = new Environment($loader);
+        $twig = new Environment($loader, [
+            'debug' => true
+        ]);
+        $twig->addExtension(new DebugExtension());
         echo $twig->render('nav.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
-        return new Environment($loader);
+        return $twig;
     }
     public function signup()
     {
@@ -23,7 +27,7 @@ class user extends controller{
                 $user->insert($_POST);
                 
                 message("Your account is successfuly created, Please login");
-                redirect('login');
+                redirect('user/login');
             }
         }
         $data['title'] = 'signup';
@@ -32,6 +36,17 @@ class user extends controller{
     }
     public function login()
     {
-        echo $this->index()->render('login.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
+        $data['title'] = "login";
+        $data['errors'] = [];
+        $user= new userModel();
+        if ($_SERVER["REQUEST_METHOD"]== "POST") {
+                $row = $user->first(['email'=>$_POST['email']]);
+                if ($row && password_verify((string) $_POST['password'],(string) $row['password'])) {
+                    Auth::authenticate($row);
+                    redirect('home');
+                }
+                $data['errors']['email']= "Wrong email or password";
+        }
+        echo $this->index()->render('login.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public','data'=>$data]);
     }
 }

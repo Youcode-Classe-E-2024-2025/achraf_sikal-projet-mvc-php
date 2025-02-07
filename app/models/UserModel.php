@@ -30,7 +30,7 @@ class userModel extends model
         }
             if (!filter_var($data['email'],FILTER_VALIDATE_EMAIL)) {
                 $this->errors['email'] = "email is not valide";
-            } elseif ($this->where(['email'=>$data['email']],'desc','user_id')) {
+            } elseif ($this->where(['email'=>$data['email']],'desc','id')) {
                 $this->errors['email'] = "email already existes";
             }
         
