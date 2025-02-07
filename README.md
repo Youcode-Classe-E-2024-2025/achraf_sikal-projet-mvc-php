@@ -1,4 +1,4 @@
-# Projet MVC OOP
+# Projet MVC en PHP
 
 Ce projet est une implémentation d'une architecture MVC (Modèle-Vue-Contrôleur) en PHP. Il vise à offrir une structure bien organisée pour le développement d'applications web modulaires et évolutives.
 
