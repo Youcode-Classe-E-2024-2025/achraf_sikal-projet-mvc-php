@@ -14,8 +14,12 @@ class dashboard extends Controller
         $twig = new Environment($loader, [
             'debug' => true
         ]);
+        $twigData = ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public'];
+        if (isset($_SESSION['USER_DATA'])) {
+            $twigData['USER_DATA'] = $_SESSION['USER_DATA'];
+        }
         $twig->addExtension(new DebugExtension());
-        echo $twig->render('nav.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
+        echo $twig->render('nav.html.twig', $twigData);
         $data['title'] = "Dashboard";
         if (!auth::logged_in()) {
             message("please log in");
@@ -26,7 +30,11 @@ class dashboard extends Controller
     }
     public function article($action= null, $id= null): void
     {
-        echo $this->index()->render('article.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
+        $twigData = ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public'];
+        if (isset($_SESSION['USER_DATA'])) {
+            $twigData['USER_DATA'] = $_SESSION['USER_DATA'];
+        }
+        echo $this->index()->render('article.html.twig', $twigData);
         $user_id = Auth::getId();
 		$article = new article();
         if (!auth::logged_in()) {
@@ -166,8 +174,8 @@ class dashboard extends Controller
     public function profile($id= null): void 
     {
         $id ??= auth::getuser_Id();
-        $user = new user();
-        $data['row'] = $row = $user->first(['user_id'=>$id]);
+        $user = new userModel();
+        $data['row'] = $row = $user->first(['id'=>$id]);
         if (!auth::logged_in()) {
             message("please log in");
             redirect("login");

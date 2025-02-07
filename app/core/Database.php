@@ -11,7 +11,7 @@ class database
         $con=$this->connect();
         $stm = $con->prepare($query);
         if ($stm) {
-            if (!is_array($data)) {
+            if (is_array($data)) {
                 $check = $stm->execute($data);
                 if ($check) {
                     $result = $stm->fetchAll(PDO::FETCH_ASSOC);

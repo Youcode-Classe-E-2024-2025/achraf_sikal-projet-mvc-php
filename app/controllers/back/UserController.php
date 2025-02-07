@@ -8,15 +8,19 @@ class user extends controller{
     public function index(){
         $data['title'] = 'home';
         $this->view('users',$data);
+        $twigData = ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public'];
+        if (isset($_SESSION['USER_DATA'])) {
+            $twigData['USER_DATA'] = $_SESSION['USER_DATA'];
+        }
         $loader = new FilesystemLoader('templates');
         $twig = new Environment($loader, [
             'debug' => true
         ]);
         $twig->addExtension(new DebugExtension());
-        echo $twig->render('nav.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
+        echo $twig->render('nav.html.twig', $twigData);
         return $twig;
     }
-    public function signup()
+    public function signup($role=null)
     {
         $user= new userModel();
         if ($_SERVER["REQUEST_METHOD"]== "POST") {
@@ -24,6 +28,7 @@ class user extends controller{
             $result = $user->validate($_POST);
             if ($result) {
                 $_POST['password'] = password_hash((string) $_POST['password'], PASSWORD_DEFAULT);
+                $_POST['role'] = $role ? $role:'reader';
                 $user->insert($_POST);
                 
                 message("Your account is successfuly created, Please login");
@@ -31,7 +36,6 @@ class user extends controller{
             }
         }
         $data['title'] = 'signup';
-        $_POST['role'] = 'writer';
         echo $this->index()->render('signup.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
     }
     public function login()
@@ -47,11 +51,19 @@ class user extends controller{
                     $twigData = array_merge($twigData, auth::getfirstname());
                     $twigData = array_merge($twigData, auth::getlastname());
                     $twigData = array_merge($twigData, auth::getemail());
+                    $twigData = array_merge($twigData, auth::getrole());
+                    $twigData['USER_DATA'] = $_SESSION['USER_DATA'];
                     redirect('home');
                 }
-                $twigData['data']['errors']['email']= "Wrong email or password";
+                else {
+                    $twigData['data']['errors']['email']= "Wrong email or password";
+                }
 
         }
         echo $this->index()->render('login.html.twig', $twigData);
+    }
+    public function logout() {
+        auth::logout();
+        redirect('home');
     }
 }

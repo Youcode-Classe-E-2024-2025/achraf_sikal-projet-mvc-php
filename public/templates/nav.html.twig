@@ -25,20 +25,20 @@
     </div>
 
     <nav class="nav-links">
-      <a href="{{ROOT}}/signup/teach" class="nav-link">Be a writer</a>
+      <a href="{{ROOT}}/user/signup/writer" class="nav-link">Be a writer</a>
     </nav>
 
     <div class="user-actions">
-        {% if true %}
+        {% if not USER_DATA %}
           <a href="{{ROOT}}/user/login" class="btn btn-outline">Log in</a>
           <a href="{{ROOT}}/user/signup" class="btn btn-primary">Sign up</a>
           {% else %}
             <div class="categories-dropdown">
-              <button class="dropdown-button"></button>
+              <button class="dropdown-button">{{USER_DATA["firstname"]}}</button>
               <div class="dropdown-content">
-                <a href="{{ROOT}}/admin">Dashboard</a>
-                <a href="{{ROOT}}/admin/profile">Profile</a>
-                <a href="{{ROOT}}/logout">logout</a>
+                <a href="{{ROOT}}/dashboard">Dashboard</a>
+                <a href="{{ROOT}}/dashboard/profile">Profile</a>
+                <a href="{{ROOT}}/user/logout">logout</a>
               </div>
             </div>
         {% endif %}

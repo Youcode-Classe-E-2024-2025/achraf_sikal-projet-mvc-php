@@ -10,6 +10,7 @@ class userModel extends model
         "firstname",
         "email",
         "password",
+        "role",
     ];
     public function validate($data): bool {
         $this->errors = [];
