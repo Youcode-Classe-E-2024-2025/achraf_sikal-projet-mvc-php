@@ -11,10 +11,10 @@ class home extends controller{
         if (isset($_SESSION['USER_DATA'])) {
             $data['USER_DATA'] = $_SESSION['USER_DATA'];
         }
-        $this->view('home',$data);
         $loader = new FilesystemLoader('templates');
         $twig = new Environment($loader);
-
+        
         echo $twig->render('nav.html.twig',$data);
+        $this->view('home',$data);
     }
 }
