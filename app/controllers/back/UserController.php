@@ -47,9 +47,10 @@ class user extends controller{
                     $twigData = array_merge($twigData, auth::getfirstname());
                     $twigData = array_merge($twigData, auth::getlastname());
                     $twigData = array_merge($twigData, auth::getemail());
-                    // redirect('home');
+                    redirect('home');
                 }
-                $data['errors']['email']= "Wrong email or password";
+                $twigData['data']['errors']['email']= "Wrong email or password";
+
         }
         echo $this->index()->render('login.html.twig', $twigData);
     }

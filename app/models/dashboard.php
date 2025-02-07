@@ -2,73 +2,66 @@
 /**
  * admin controller
  */
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\Extension\DebugExtension;
-
 class dashboard extends Controller
 {
-    public function index()
+    public function index(): void 
     {
-        $loader = new FilesystemLoader('templates');
-        $twig = new Environment($loader, [
-            'debug' => true
-        ]);
-        $twig->addExtension(new DebugExtension());
-        echo $twig->render('nav.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
         $data['title'] = "Dashboard";
+
         if (!auth::logged_in()) {
             message("please log in");
             redirect("login");
         }
         $this->view('dashboard',$data);
-        return $twig;
     }
-    public function article($action= null, $id= null): void
+    public function courses($action= null, $id= null): void
     {
-        echo $this->index()->render('article.html.twig', ['ROOT'=>ROOT, 'style'=>'http://localhost/sikal_achraf-youdemy/public']);
         $user_id = Auth::getId();
-		$article = new article();
+		$course = new Course();
+		$category = new Category();
         if (!auth::logged_in()) {
             message("please log in");
             redirect("login");
         }
-        $user_id = auth::getid();
-        $article = new article();
+        $user_id = auth::getuser_Id();
+        $course = new course();
         $data = [];
         $data['action'] = $action;
         $data['id'] = $id;
         if ($action == "add") {
+            $category = new category();
+
+            $data['categories'] = $category->findAll("asc");
 
             if ($_SERVER["REQUEST_METHOD"]== "POST")
             {
-                if ($article->validate($_POST)) {
+                if ($course->validate($_POST)) {
                     $_POST["user_id"] = $user_id;
 
-                    $article->insert($_POST);
+                    $course->insert($_POST);
 
-                    $row = $article->first(['user_id'=>$user_id]);
-                    message("Your article was successfuly created");
+                    $row = $course->first(['user_id'=>$user_id]);
+                    message("Your course was successfuly created");
                     if ($row) {
-                        redirect('admin/article/');
+                        redirect('admin/courses/');
                     }else {
-                        redirect('admin/article');
+                        redirect('admin/courses');
                     }
                     
                 }
-                $data['errors'] = $article->errors;
+                $data['errors'] = $course->errors;
             }
         }elseif ($action == "delete") {
-            $id = trim((string) $_GET['url'],'admin/article/delete/');
-            $article->delete($id);
-            redirect('admin/article');
+            $id = trim((string) $_GET['url'],'admin/courses/delete/');
+            $course->delete($id);
+            redirect('admin/courses');
         }elseif ($action == "edit") 
         {
             if ($_SERVER["REQUEST_METHOD"]== "POST")
             {
-                $id = trim((string) $_GET['url'],'admin/article/edit/');
+                $id = trim((string) $_GET['url'],'admin/courses/edit/');
                 ///////////////////////////////////////////// cover image upload star /////////////////////////////////////
-                $target_dir = "uploads/article/img/";
+                $target_dir = "uploads/courses/img/";
                 if(!$_POST["image_link"]==null){
                     $target_file = "../".$target_dir . basename((string) $_FILES["fileToUpload"]["name"]);
                     $uploadOk = 1;
@@ -107,7 +100,7 @@ class dashboard extends Controller
                         // if everything is ok, try to upload file
                     } elseif (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                         echo "The file ". htmlspecialchars( basename( (string) $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-                        $_POST['article_image'] = trim(ROOT,'public').$target_dir.$_FILES["fileToUpload"]["name"];
+                        $_POST['course_image'] = trim(ROOT,'public').$target_dir.$_FILES["fileToUpload"]["name"];
                     } else {
                         echo "<script>alert('Sorry, there was an error uploading your file.')</script>";
                     }
@@ -116,7 +109,7 @@ class dashboard extends Controller
 
 
                 ///////////////////////////////////////////// video upload star /////////////////////////////////////
-                $target_dir = "uploads/article/video/";
+                $target_dir = "uploads/courses/video/";
                 if(isset($_FILES["videoToUpload"])){
                     $target_file = "../".$target_dir . basename((string) $_FILES["videoToUpload"]["name"]);
                     $uploadOk = 1;
@@ -151,17 +144,19 @@ class dashboard extends Controller
                     }
                 }
                 ////////////////////////////////////////// video upload end /////////////////////////////////////////
-                $article->update($id, $_POST,'article_id');
-                redirect('admin/article/edit/'.$id);
+                $course->update($id, $_POST,'course_id');
+                redirect('admin/courses/edit/'.$id);
             }
-            //////////////// get article info ////////////////
-            $data['row'] = $article->first(['user_id'=>$user_id, 'article_id'=>$id]);
+            //////////////// get courses info ////////////////
+            $data['categories'] = $category->findAll("asc");
+            $data['row'] = $course->first(['user_id'=>$user_id, 'course_id'=>$id]);
         }
         else {
-            //////////////// article view ////////////////
-            $data['rows'] = $article->where(['user_id'=>$user_id]);
+            //////////////// courses view ////////////////
+            $data['rows'] = $course->where(['user_id'=>$user_id]);
         }
-        // $this->view('/../front/article',$data);
+
+        $this->view('admin/courses',$data);
     }
     public function profile($id= null): void 
     {

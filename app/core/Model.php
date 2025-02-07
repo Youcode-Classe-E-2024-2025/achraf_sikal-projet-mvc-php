@@ -43,28 +43,73 @@ class model extends database
         $data[$idName] = $id;
         $this->query($query, $data);
     }
-    public function where($data, $order = "desc", $order_by = "course_id"){
+    // public function where($data, $order = "DESC", $order_by = "id") {
+    //     $keys = array_keys($data);
+    
+    //     $query = "SELECT * FROM \"$this->table\" WHERE ";
+    //     foreach ($keys as $key) {
+    //         $query .= "\"$key\" = :$key AND ";
+    //     }
+    
+    //     // Trim the trailing 'AND'
+    //     $query = rtrim($query, " AND ");
+        
+    //     // Ensure column ordering is safe
+    //     $query .= " ORDER BY \"$order_by\" $order";
+    
+    //     $res = $this->query($query, $data);
+    
+    //     if (is_array($res)) {
+    //         // Call afterSelect function if it exists
+    //         if (property_exists($this, 'afterSelect')) {
+    //             foreach ($this->afterSelect as $func) {
+    //                 $res = $this->$func($res);
+    //             }
+    //         }
+    //         return $res;
+    //     }
+    
+    //     return false;
+    // }
+    public function where($data, $order = "DESC", $order_by = "id") {
+        if (!is_array($data) || empty($data)) {
+            throw new Exception("Invalid data: where() expects a non-empty associative array.");
+        }
+    
         $keys = array_keys($data);
-
-        $query = "select * from " . $this->table . " where ";
+        $query = "SELECT * FROM \"$this->table\" WHERE ";
+        
         foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . " && ";
+            $query .= "\"$key\" = :$key AND ";
         }
-
-        $query = trim($query, "&& ");
-        $query .= " order by $order_by $order ";
-        $res = $this->query($query, $data);
-        if (is_array($res)) {
-            ////// call afterSelect function ////////////
-            if (property_exists($this, 'afterSelect')) {
-                foreach ($this->afterSelect as $func) {
-                    $res = $this->$func($res);
+    
+        // Remove the last "AND"
+        $query = rtrim($query, " AND ");
+        $query .= " ORDER BY \"$order_by\" $order";
+    
+        // Debugging: Print the query
+        error_log("Executing SQL: " . $query);
+    
+        try {
+            $res = $this->query($query, $data);
+    
+            if (is_array($res)) {
+                // Call afterSelect function if it exists
+                if (property_exists($this, 'afterSelect')) {
+                    foreach ($this->afterSelect as $func) {
+                        $res = $this->$func($res);
+                    }
                 }
+                return $res;
             }
-            return $res;
+    
+            return false;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
         }
-        return false;
     }
+    
 
     public function delete($id) {
 
