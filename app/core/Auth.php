@@ -30,7 +30,7 @@ class Auth
     {
         $key = str_replace("get", "", strtolower((string) $fun));
         if (!empty($_SESSION['USER_DATA'][$key])) {
-            return $_SESSION['USER_DATA'][$key];
+            return [$key => $_SESSION['USER_DATA'][$key]];
         }
         return '';
     }
